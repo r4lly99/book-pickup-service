@@ -8,15 +8,13 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class BooksDTO {
 
     private String editionNumbers;
