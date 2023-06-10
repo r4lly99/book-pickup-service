@@ -1,7 +1,11 @@
 package com.online.demo.bookpickupservice.controller;
 
 import com.online.demo.bookpickupservice.dto.BooksDTO;
+import com.online.demo.bookpickupservice.dto.SubmitBookRequest;
+import com.online.demo.bookpickupservice.dto.SubmitBookResponse;
+import com.online.demo.bookpickupservice.enumeration.SubmitResponseEnum;
 import com.online.demo.bookpickupservice.service.BookService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,5 +62,53 @@ class BooksControllerTest {
 
         ResponseEntity<?> result = booksController.getListofBooks(subject);
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+    }
+
+    @Test
+    void testSubmitBookPickUp_Success(){
+        SubmitBookRequest submitBookRequest = SubmitBookRequest.builder()
+                .editionNumbers(26)
+                .pickUpDateTime(LocalDateTime.of(2023, 6, 10, 10, 0, 0))
+                .phoneNumber("081122334456")
+                .username("Joni")
+                .build();
+        BooksDTO mockBookDTO = BooksDTO.builder()
+                .availableToBorrow(true)
+                .authors(List.of("Ramsey"))
+                .title("Head First Design Pattern")
+                .build();
+
+        Mockito.when(bookService.submitBookPickup(submitBookRequest)).thenReturn(SubmitBookResponse.builder()
+                        .status(SubmitResponseEnum.SUCCESS.toString())
+                        .book(mockBookDTO)
+                        .username("Joni")
+                        .pickUpDateTime(LocalDateTime.of(2023, 6, 10, 10, 0, 0))
+                .build());
+
+        SubmitBookResponse expectedResponse = SubmitBookResponse.builder()
+                .status(SubmitResponseEnum.SUCCESS.toString())
+                .book(mockBookDTO)
+                .username("Joni")
+                .pickUpDateTime(LocalDateTime.of(2023, 6, 10, 10, 0, 0))
+                .build();
+
+        ResponseEntity<?> result = booksController.submitBookPickUp(submitBookRequest);
+
+        Assertions.assertEquals(expectedResponse, result.getBody());
+    }
+
+    @Test
+    void testSubmitBookPickUp_Failed1(){
+        SubmitBookRequest submitBookRequest = SubmitBookRequest.builder()
+                .editionNumbers(26)
+                .pickUpDateTime(LocalDateTime.of(2023, 6, 10, 10, 0, 0))
+                .phoneNumber("081122334456")
+                .username("Joni")
+                .build();
+        Mockito.when(bookService.submitBookPickup(submitBookRequest)).thenReturn(SubmitBookResponse.builder()
+                        .status(SubmitResponseEnum.FAILED.name())
+                        .build());
+        ResponseEntity<?> result = booksController.submitBookPickUp(submitBookRequest);
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
     }
 }

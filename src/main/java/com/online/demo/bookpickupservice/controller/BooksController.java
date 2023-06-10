@@ -4,6 +4,7 @@ import com.online.demo.bookpickupservice.constant.BooksConstant;
 import com.online.demo.bookpickupservice.dto.BooksDTO;
 import com.online.demo.bookpickupservice.dto.SubmitBookRequest;
 import com.online.demo.bookpickupservice.dto.SubmitBookResponse;
+import com.online.demo.bookpickupservice.enumeration.SubmitResponseEnum;
 import com.online.demo.bookpickupservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,9 @@ public class BooksController {
             SubmitBookResponse submitBookResponse = bookService.submitBookPickup(submitBookRequest);
             if (Objects.isNull(submitBookResponse)){
                 return ResponseEntity.badRequest().build();
+            }
+            if (submitBookResponse.getStatus().contentEquals(SubmitResponseEnum.FAILED.name())){
+                return ResponseEntity.notFound().build();
             }
             return ResponseEntity.ok(submitBookResponse);
         } catch (Exception e) {
