@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,7 +23,7 @@ class BookServiceTest {
     private OpenLibraryClient openLibraryClient;
 
     @Test
-    void successGetBooksBySubject(){
+    void testGetBooksBySubject_Success(){
         String subject = "java";
         String title = "Java software solutions";
 
@@ -43,7 +44,7 @@ class BookServiceTest {
                 .works(List.of(works))
                 .build();
 
-        Mockito.when(openLibraryClient.getBooksBySubject(Mockito.eq(subject))).thenReturn(mockApiResponse);
+        Mockito.when(openLibraryClient.getBooksBySubject(subject)).thenReturn(mockApiResponse);
         List<BooksDTO> result = bookService.getBooksBySubject(subject);
 
         List<BooksDTO> expected = List.of(BooksDTO.builder()
@@ -57,7 +58,20 @@ class BookServiceTest {
         Assertions.assertEquals(expected, result);
     }
 
+    @Test
+    void testGetBooksBySubject_Failed(){
+        String subject = "java";
 
+        SubjectsAPIResponse mockApiResponse = SubjectsAPIResponse.builder()
+                .name("java")
+                .works(Collections.emptyList())
+                .build();
+
+        Mockito.when(openLibraryClient.getBooksBySubject(subject)).thenReturn(mockApiResponse);
+        List<BooksDTO> result = bookService.getBooksBySubject(subject);
+
+        Assertions.assertEquals(Collections.emptyList(), result);
+    }
 
 
 }

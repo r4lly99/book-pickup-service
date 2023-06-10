@@ -26,7 +26,7 @@ class BooksControllerTest {
     private BookService bookService;
 
     @Test
-    void successGetListOfBooks(){
+    void testGetListOfBooks_success(){
         String subject = "java";
         List<BooksDTO> mockResult = List.of(BooksDTO.builder()
                 .title("Java software solutions")
@@ -35,7 +35,7 @@ class BooksControllerTest {
                 .status("borrow_available")
                 .availableToBorrow(true)
                 .build());
-        Mockito.when(bookService.getBooksBySubject(Mockito.eq(subject))).thenReturn(mockResult);
+        Mockito.when(bookService.getBooksBySubject(subject)).thenReturn(mockResult);
 
         ResponseEntity<?> result = booksController.getListofBooks(subject);
         List<BooksDTO> expectedResult = List.of(BooksDTO.builder()
@@ -51,9 +51,9 @@ class BooksControllerTest {
     }
 
     @Test
-    void failedGetListOfBooks(){
+    void testGetListOfBooks_Failed(){
         String subject = "java";
-        Mockito.when(bookService.getBooksBySubject(Mockito.eq(subject))).thenReturn(Collections.emptyList());
+        Mockito.when(bookService.getBooksBySubject(subject)).thenReturn(Collections.emptyList());
 
         ResponseEntity<?> result = booksController.getListofBooks(subject);
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());

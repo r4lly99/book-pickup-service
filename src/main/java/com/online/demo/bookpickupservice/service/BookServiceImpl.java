@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService{
     public List<BooksDTO> getBooksBySubject(String subject) {
 
         SubjectsAPIResponse subjectsAPIResponse = openLibraryClient.getBooksBySubject(subject);
-        if (subjectsAPIResponse == null || subjectsAPIResponse.getWorks().size() == 0) {
+        if (subjectsAPIResponse == null || subjectsAPIResponse.getWorks().isEmpty()) {
             return Collections.emptyList();
         }
 
