@@ -30,13 +30,13 @@ class BookServiceTest {
         SubjectsAPIResponse.Works works = SubjectsAPIResponse.Works.builder()
                 .key("/works/OL94732W")
                 .title(title)
+                .editionCount(26)
                 .authors(List.of(SubjectsAPIResponse.Works.Authors.builder()
                                 .name("Lewis, John")
                                 .build()))
                 .availability(SubjectsAPIResponse.Works.Availability.builder()
                         .availableToBorrow(true)
                         .status("borrow_available")
-                        .isbn("0201725975")
                         .build())
                 .build();
         SubjectsAPIResponse mockApiResponse = SubjectsAPIResponse.builder()
@@ -48,7 +48,7 @@ class BookServiceTest {
         List<BooksDTO> result = bookService.getBooksBySubject(subject);
 
         List<BooksDTO> expected = List.of(BooksDTO.builder()
-                        .editionNumbers("0201725975")
+                        .editionNumbers(26)
                         .title(title)
                         .authors(List.of("Lewis, John"))
                         .status("borrow_available")

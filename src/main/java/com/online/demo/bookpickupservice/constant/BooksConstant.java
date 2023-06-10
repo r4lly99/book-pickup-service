@@ -7,5 +7,6 @@ import lombok.NoArgsConstructor;
 public class BooksConstant {
 
     public static final String API_BOOK_LIST = "book-list";
+    public static final String API_BOOK_PICK_UP = "pickup";
 
 }
