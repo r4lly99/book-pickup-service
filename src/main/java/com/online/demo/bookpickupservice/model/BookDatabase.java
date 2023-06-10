@@ -6,20 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BookDatabase {
+public enum BookDatabase {
 
-    private static BookDatabase instance;
+    INSTANCE;
+
     private final Map<Integer, BooksDTO> database;
 
-    private BookDatabase() {
+    BookDatabase() {
         database = new HashMap<>();
-    }
-
-    public static synchronized BookDatabase getInstance() {
-        if (instance == null) {
-            instance = new BookDatabase();
-        }
-        return instance;
     }
 
     public void reset() {
@@ -27,7 +21,7 @@ public class BookDatabase {
     }
 
     public void update(List<BooksDTO> response) {
-        if (response == null ) {
+        if (response == null) {
             return;
         }
 

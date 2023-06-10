@@ -34,7 +34,7 @@ public class BookServiceImpl implements BookService{
         }
 
         List<BooksDTO> booksDTOList = new ArrayList<>();
-        BookDatabase bookDatabase = BookDatabase.getInstance();
+        BookDatabase bookDatabase = BookDatabase.INSTANCE;
         for (SubjectsAPIResponse.Works work : subjectsAPIResponse.getWorks()) {
             List<String> authorNames = extractAuthorNames(work.getAuthors());
             BooksDTO booksDTO = BooksDTO.builder()
@@ -56,14 +56,14 @@ public class BookServiceImpl implements BookService{
     @Override
     public SubmitBookResponse submitBookPickup(SubmitBookRequest submitBookRequest) {
         log.info("Get data from memory ");
-        BookDatabase database = BookDatabase.getInstance();
+        BookDatabase database = BookDatabase.INSTANCE;
         BooksDTO booksDTO = database.getByEditionNumber(submitBookRequest.getEditionNumbers());
         log.info("Result -> {}", booksDTO);
         if (booksDTO == null){
             log.error("Data not found or empty !");
             return buildFailedResponse();
         }
-        if (!booksDTO.getAvailableToBorrow()){
+        if (Boolean.FALSE.equals(booksDTO.getAvailableToBorrow())){
             log.error("Unable to borrow the book!");
             return buildFailedResponse();
         }
