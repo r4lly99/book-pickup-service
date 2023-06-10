@@ -30,7 +30,7 @@ class BooksControllerTest {
         String subject = "java";
         List<BooksDTO> mockResult = List.of(BooksDTO.builder()
                 .title("Java software solutions")
-                .editionNumbers("0201725975")
+                .editionNumbers(26)
                 .authors(List.of("Lewis, John"))
                 .status("borrow_available")
                 .availableToBorrow(true)
@@ -40,7 +40,7 @@ class BooksControllerTest {
         ResponseEntity<?> result = booksController.getListofBooks(subject);
         List<BooksDTO> expectedResult = List.of(BooksDTO.builder()
                         .title("Java software solutions")
-                        .editionNumbers("0201725975")
+                        .editionNumbers(26)
                         .authors(List.of("Lewis, John"))
                         .status("borrow_available")
                         .availableToBorrow(true)

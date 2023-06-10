@@ -6,21 +6,19 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class BooksDTO {
+@ToString
+public class SubmitBookResponse {
 
-    private Integer editionNumbers;
-    private String title;
-    private List<String> authors;
     private String status;
-    private Boolean availableToBorrow;
+    private BooksDTO book;
+    private String username;
+    private LocalDateTime pickUpDateTime;
 
 }
