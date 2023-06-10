@@ -5,6 +5,7 @@ import com.online.demo.bookpickupservice.dto.BooksDTO;
 import com.online.demo.bookpickupservice.dto.SubjectsAPIResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,9 +21,11 @@ public class BookServiceImpl implements BookService{
     private final OpenLibraryClient openLibraryClient;
 
     @Override
+    @Cacheable(value = "books-list", key = "#subject")
     public List<BooksDTO> getBooksBySubject(String subject) {
+
         SubjectsAPIResponse subjectsAPIResponse = openLibraryClient.getBooksBySubject(subject);
-        if (subjectsAPIResponse == null || subjectsAPIResponse.getWorks() == null) {
+        if (subjectsAPIResponse == null || subjectsAPIResponse.getWorks().size() == 0) {
             return Collections.emptyList();
         }
 
@@ -32,8 +35,12 @@ public class BookServiceImpl implements BookService{
             BooksDTO booksDTO = BooksDTO.builder()
                     .title(work.getTitle())
                     .authors(authorNames)
-                    .editionNumbers(work.getEditionCount())
                     .build();
+            if (work.getAvailability() != null) {
+                booksDTO.setEditionNumbers(work.getAvailability().getIsbn());
+                booksDTO.setStatus(work.getAvailability().getStatus());
+                booksDTO.setAvailableToBorrow(work.getAvailability().getAvailableToBorrow());
+            }
             booksDTOList.add(booksDTO);
         }
 

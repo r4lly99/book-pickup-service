@@ -22,8 +22,13 @@ public class BooksController {
 
     private final BookService bookService;
 
-    @GetMapping(value = BooksConstant.BOOK_LIST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<BooksDTO>> getListofBooks(@RequestParam String subject){
+    @GetMapping(value = BooksConstant.API_BOOK_LIST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getListofBooks(@RequestParam String subject){
+        log.info("Request " + BooksConstant.API_BOOK_LIST + " with subject : " + subject);
+        List<BooksDTO> booksDTOList = bookService.getBooksBySubject(subject);
+        if (booksDTOList.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(bookService.getBooksBySubject(subject));
     }
 

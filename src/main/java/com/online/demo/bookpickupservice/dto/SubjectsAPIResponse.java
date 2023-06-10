@@ -37,6 +37,7 @@ public class SubjectsAPIResponse {
         private String title;
         private Integer editionCount;
         private List<Authors> authors;
+        private Availability availability;
 
         @Getter
         @Setter
@@ -47,6 +48,20 @@ public class SubjectsAPIResponse {
         @Builder
         public static class Authors {
             private String name;
+        }
+
+        @Getter
+        @Setter
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class Availability {
+            private String isbn;
+            private String status;
+            private Boolean availableToBorrow;
         }
 
     }

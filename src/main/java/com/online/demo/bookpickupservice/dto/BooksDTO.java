@@ -19,8 +19,10 @@ import java.util.List;
 @ToString
 public class BooksDTO {
 
+    private String editionNumbers;
     private String title;
     private List<String> authors;
-    private Integer editionNumbers;
+    private String status;
+    private Boolean availableToBorrow;
 
 }
