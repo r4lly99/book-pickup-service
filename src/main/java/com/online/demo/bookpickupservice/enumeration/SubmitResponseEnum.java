@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public enum SubmitResponseEnum {
 
-    SUCCESS, FAILED
+    SUCCESS, FAILED, ERROR
 
 }

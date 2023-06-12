@@ -25,7 +25,7 @@ public class SubmitBookRequest {
 
     @NotNull
     private Integer editionNumbers;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime pickUpDateTime;
     @NotBlank
     private String username;
