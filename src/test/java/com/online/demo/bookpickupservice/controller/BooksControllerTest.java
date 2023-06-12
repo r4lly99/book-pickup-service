@@ -1,5 +1,6 @@
 package com.online.demo.bookpickupservice.controller;
 
+import com.online.demo.bookpickupservice.constant.BooksConstant;
 import com.online.demo.bookpickupservice.dto.BooksDTO;
 import com.online.demo.bookpickupservice.dto.SubmitBookRequest;
 import com.online.demo.bookpickupservice.dto.SubmitBookResponse;
@@ -110,5 +111,21 @@ class BooksControllerTest {
                         .build());
         ResponseEntity<?> result = booksController.submitBookPickUp(submitBookRequest);
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+    }
+
+    @Test
+    void testSubmitBookPickUp_Failed2(){
+        SubmitBookRequest submitBookRequest = SubmitBookRequest.builder()
+                .editionNumbers(26)
+                .pickUpDateTime(LocalDateTime.now().minusDays(1))
+                .phoneNumber("081122334456")
+                .username("Joni")
+                .build();
+        Mockito.when(bookService.submitBookPickup(submitBookRequest)).thenReturn(SubmitBookResponse.builder()
+                        .status(SubmitResponseEnum.ERROR.name())
+                        .errorMessage(BooksConstant.ERROR_PICK_UP_DATE_TIME)
+                .build());
+        ResponseEntity<?> result = booksController.submitBookPickUp(submitBookRequest);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
     }
 }
