@@ -8,8 +8,8 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 public class BookPickupServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BookPickupServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BookPickupServiceApplication.class, args);
+    }
 
 }

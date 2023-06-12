@@ -1,6 +1,7 @@
 package com.online.demo.bookpickupservice.service;
 
 import com.online.demo.bookpickupservice.client.OpenLibraryClient;
+import com.online.demo.bookpickupservice.constant.BooksConstant;
 import com.online.demo.bookpickupservice.dto.BooksDTO;
 import com.online.demo.bookpickupservice.dto.SubjectsAPIResponse;
 import com.online.demo.bookpickupservice.dto.SubmitBookRequest;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BookServiceImpl implements BookService{
+public class BookServiceImpl implements BookService {
 
     private final OpenLibraryClient openLibraryClient;
 
@@ -59,15 +61,19 @@ public class BookServiceImpl implements BookService{
         BookDatabase database = BookDatabase.INSTANCE;
         BooksDTO booksDTO = database.getByEditionNumber(submitBookRequest.getEditionNumbers());
         log.info("Result -> {}", booksDTO);
-        if (booksDTO == null){
+        if (booksDTO == null) {
             log.error("Data not found or empty !");
             return buildFailedResponse();
         }
-        if (Boolean.FALSE.equals(booksDTO.getAvailableToBorrow())){
+        if (Boolean.FALSE.equals(booksDTO.getAvailableToBorrow())) {
             log.error("Unable to borrow the book!");
             return buildFailedResponse();
         }
-       return buildSuccessResponse(booksDTO, submitBookRequest);
+        if (submitBookRequest.getPickUpDateTime().isBefore(LocalDateTime.now())) {
+            log.error("Unable pickup that current date time!");
+            return buildErrorResponse(BooksConstant.ERROR_PICK_UP_DATE_TIME);
+        }
+        return buildSuccessResponse(booksDTO, submitBookRequest);
     }
 
     private List<String> extractAuthorNames(List<SubjectsAPIResponse.Works.Authors> authors) {
@@ -79,7 +85,7 @@ public class BookServiceImpl implements BookService{
                 .collect(Collectors.toList());
     }
 
-    private SubmitBookResponse buildSuccessResponse(BooksDTO booksDTO, SubmitBookRequest submitBookRequest){
+    private SubmitBookResponse buildSuccessResponse(BooksDTO booksDTO, SubmitBookRequest submitBookRequest) {
         return SubmitBookResponse.builder()
                 .status(SubmitResponseEnum.SUCCESS.toString())
                 .book(booksDTO)
@@ -88,9 +94,16 @@ public class BookServiceImpl implements BookService{
                 .build();
     }
 
-    private SubmitBookResponse buildFailedResponse(){
+    private SubmitBookResponse buildFailedResponse() {
         return SubmitBookResponse.builder()
                 .status(SubmitResponseEnum.FAILED.toString())
+                .build();
+    }
+
+    private SubmitBookResponse buildErrorResponse(String errorMessage) {
+        return SubmitBookResponse.builder()
+                .status(SubmitResponseEnum.ERROR.toString())
+                .errorMessage(errorMessage)
                 .build();
     }
 }
